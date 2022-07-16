@@ -1,6 +1,8 @@
-const term = require( 'terminal-kit' ).terminal;
+const term = require('terminal-kit').terminal;
 
-const { commandType } = require('./utils');
+const { parseCommandType } = require('./utils');
+const { addProduct } = require('./services/product');
+const commandTypes = require('./config/commandTypes');
 
 
 const history = ['ADD', 'S', 'U', 'LIST'];
@@ -35,8 +37,22 @@ const renderInputField = () => {
       if (error) {
         terminal.red(`${error}`);
       }
-      const validate = commandType(input)
-      term.green( "\nYour name is '%s'\n" , input );
+      const commandType = parseCommandType(input);
+      if (commandType === commandTypes.addProduct) {
+        addProduct(input);
+      } else if (commandType === commandTypes.addWarehouse) {
+
+      } else if (commandType === commandTypes.stock) {
+
+      } else if (commandType === commandTypes.unstock) {
+
+      } else if (commandType === commandTypes.listProducts) {
+
+      } else if (commandType === commandTypes.listWarehouses) {
+
+      } else if (commandType === commandTypes.listWarehouse) {
+
+      }
       renderInputField();
     }
   );

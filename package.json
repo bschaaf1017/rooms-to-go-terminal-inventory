@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "nodemon -L app.js"
+
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "nodemon": "^2.0.19",
     "terminal-kit": "^2.4.0"
   }
 }
