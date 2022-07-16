@@ -1,6 +1,6 @@
 const term = require( 'terminal-kit' ).terminal;
 
-const { commandType } = require('./utils');
+const { parseCommandType } = require('./utils');
 
 
 const history = ['ADD', 'S', 'U', 'LIST'];
@@ -35,8 +35,7 @@ const renderInputField = () => {
       if (error) {
         terminal.red(`${error}`);
       }
-      const validate = commandType(input)
-      term.green( "\nYour name is '%s'\n" , input );
+      const validate = parseCommandType(input);
       renderInputField();
     }
   );
