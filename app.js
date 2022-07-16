@@ -62,7 +62,7 @@ const renderInputField = () => {
           listSingleWarehouse(input);
           break;
         case commandTypes.clear:
-          clear();
+          clearDB();
           break;
         default:
           break;
