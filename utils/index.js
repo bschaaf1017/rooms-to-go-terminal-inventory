@@ -49,5 +49,14 @@ module.exports = {
     } catch (err) {
       console.log('err: ', err)
     }
+  },
+
+  writeToJsonFile: (data) => {
+    data = JSON.stringify(data)
+    try {
+      fs.writeFileSync('rooms-to-go.json', data);
+    } catch (err) {
+      console.log('err', err)
+    }
   }
 }
