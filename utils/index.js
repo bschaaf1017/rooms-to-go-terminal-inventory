@@ -1,4 +1,4 @@
-const term = require('')
+const term = require( 'terminal-kit' ).terminal;
 
 module.exports = {
   commandType: (input) => {
@@ -7,7 +7,6 @@ module.exports = {
     }
     const command = input.split(' ')
 
-    if
     console.log('command:', command)
   },
 }
