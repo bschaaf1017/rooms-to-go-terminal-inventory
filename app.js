@@ -1,7 +1,7 @@
 const term = require('terminal-kit').terminal;
 
-const { parseCommandType } = require('./utils');
-const { addProduct } = require('./services/product');
+const { parseCommandType, clearDB } = require('./utils');
+const { addProduct, listProducts } = require('./services/product');
 const commandTypes = require('./config/commandTypes');
 
 
@@ -47,11 +47,13 @@ const renderInputField = () => {
       } else if (commandType === commandTypes.unstock) {
 
       } else if (commandType === commandTypes.listProducts) {
-
+        listProducts();
       } else if (commandType === commandTypes.listWarehouses) {
 
       } else if (commandType === commandTypes.listWarehouse) {
 
+      } else if (commandType === commandTypes.clear) {
+        clearDB();
       }
       renderInputField();
     }

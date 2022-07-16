@@ -6,5 +6,6 @@ const commandTypes = {
   listProducts: 'LIST PRODUCTS',
   listWarehouses: 'LIST WAREHOUSES',
   listWarehouse: 'LIST WAREHOUSE',
+  clear: 'CLEAR',
 }
 module.exports = commandTypes
