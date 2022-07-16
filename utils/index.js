@@ -48,7 +48,6 @@ module.exports = {
   readJsonfile: () => {
     try {
       const file = fs.readFileSync('rooms-to-go.json', 'utf8');
-      console.log('file: ', file)
       return JSON.parse(file);
     } catch (err) {
       console.log('err: ', err)

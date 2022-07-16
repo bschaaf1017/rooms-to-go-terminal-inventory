@@ -34,7 +34,6 @@ module.exports = {
 
     const file = readJsonfile();
     const { products } = file;
-    console.log('products: ', products)
 
     for (let i = 0; i < products.length; i++) {
       if (products[i].sku === sku) {
@@ -59,8 +58,6 @@ module.exports = {
       ]
     }
 
-    console.log('newFile: ', newFile)
-
     writeToJsonFile(newFile);
     terminal.green(`Product ${productName} added sucsessfully!`)
 
@@ -73,7 +70,10 @@ module.exports = {
     const table = products.map((product) => {
       return [product.name, product.sku]
     })
-    console.log('table: ', table)
+    if (table.length === 0) {
+      terminal.red('There are no prducts in the database.');
+      return;
+    }
     table.unshift(['Product Name', 'SKU'])
     terminal.table(table,{
       hasBorder: true ,
@@ -83,30 +83,8 @@ module.exports = {
       textAttr: { bgColor: 'default' } ,
       firstCellTextAttr: { bgColor: 'blue' } ,
       firstRowTextAttr: { bgColor: 'blue' } ,
-      width: 60 ,
-      fit: true   // Activate all expand/shrink + wordWrap
+      width: 80 ,
+      fit: true
     })
   }
 }
-
-/*
-term.table( [
-		[ 'header #1' , 'header #2' , 'header #3' ] ,
-		[ 'row #1' , 'a much bigger cell, a much bigger cell, a much bigger cell... ' , 'cell' ] ,
-		[ 'row #2' , 'cell' , 'a medium cell' ] ,
-		[ 'row #3' , 'cell' , 'cell' ] ,
-		[ 'row #4' , 'cell\nwith\nnew\nlines' , '^YThis ^Mis ^Ca ^Rcell ^Gwith ^Bmarkup^R^+!' ]
-	] , {
-		hasBorder: true ,
-		contentHasMarkup: true ,
-		borderChars: 'lightRounded' ,
-		borderAttr: { color: 'blue' } ,
-		textAttr: { bgColor: 'default' } ,
-		firstCellTextAttr: { bgColor: 'blue' } ,
-		firstRowTextAttr: { bgColor: 'yellow' } ,
-		firstColumnTextAttr: { bgColor: 'red' } ,
-		width: 60 ,
-		fit: true   // Activate all expand/shrink + wordWrap
-	}
-) ;
-*/
