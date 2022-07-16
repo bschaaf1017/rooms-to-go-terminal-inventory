@@ -38,7 +38,6 @@ const renderInputField = () => {
         terminal.red(`${error}`);
       }
       const commandType = parseCommandType(input);
-      console.log('validate: ', commandType)
       if (commandType === commandTypes.addProduct) {
         addProduct(input);
       } else if (commandType === commandTypes.addWarehouse) {
