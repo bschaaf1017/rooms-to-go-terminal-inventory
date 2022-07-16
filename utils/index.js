@@ -33,4 +33,9 @@ module.exports = {
     return;
 
   },
+
+  validateSKU: (sku) => {
+    const skuRegex = /^[a-zA-Z\d]{8}-[a-zA-Z\d]{4}-[a-zA-Z\d]{4}-[a-zA-Z\d]{4}-[a-zA-Z\d]{12}$/
+    return skuRegex.test(sku);
+  },
 }
