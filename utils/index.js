@@ -25,11 +25,9 @@ module.exports = {
         return commandList[i];
       }
       if (inputCommand[0].concat(' ', inputCommand[1]) === commandList[i]) {
-        console.log('here')
         return commandList[i];
       }
     }
-
 
     terminal.red('\nPlease enter a valid command');
     return;
