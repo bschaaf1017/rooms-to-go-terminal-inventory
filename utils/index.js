@@ -23,6 +23,10 @@ module.exports = {
           commandList[i] === commandTypes.unstock
           && inputCommand[0] === commandList[i]
         )
+        || (
+          commandList[i] === commandTypes.clear
+          && inputCommand[0] === commandList[i]
+        )
       ) {
         return commandList[i];
       }
@@ -57,6 +61,20 @@ module.exports = {
       fs.writeFileSync('rooms-to-go.json', data);
     } catch (err) {
       console.log('err', err)
+    }
+  },
+
+  clearDB: () => {
+    const newFile = JSON.stringify({
+      products: [],
+      warehouses: [],
+      stock: []
+    })
+    try {
+      fs.writeFileSync('rooms-to-go.json', newFile);
+
+    } catch (err) {
+      console.log('err: ', err)
     }
   }
 }
