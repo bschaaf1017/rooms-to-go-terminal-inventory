@@ -36,6 +36,7 @@ const renderInputField = () => {
         terminal.red(`${error}`);
       }
       const validate = parseCommandType(input);
+      console.log('validate: ', validate)
       renderInputField();
     }
   );

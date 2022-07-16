@@ -1,24 +1,35 @@
 const { terminal } = require('terminal-kit');
 const commandTypes = require('../config/commandTypes');
 
-const term = require( 'terminal-kit' ).terminal;
-
 module.exports = {
   parseCommandType: (input) => {
     if (input === '') {
       terminal.red('\nPlease enter a valid command');
       return;
     }
-    const splitCommand = input.split(' ')
+    const inputCommand = input.split(' ')
 
-    Object.values(commandTypes).forEach(command => {
-      console.log('command: ', command)
+    const commandList = Object.values(commandTypes);
 
-      if (splitCommand[0].concat(' ', splitCommand[1]) === command) {
-        console.log('here')
-        return command;
+    for (let i = 0; i < commandList.length; i++) {
+      if (
+        (
+          commandList[i] === commandTypes.stock
+          && inputCommand[0] === commandList[i]
+        )
+        || (
+          commandList[i] === commandTypes.unstock
+          && inputCommand[0] === commandList[i]
+        )
+      ) {
+        return commandList[i];
       }
-    })
+      if (inputCommand[0].concat(' ', inputCommand[1]) === commandList[i]) {
+        console.log('here')
+        return commandList[i];
+      }
+    }
+
 
     terminal.red('\nPlease enter a valid command');
     return;
