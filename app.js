@@ -2,10 +2,11 @@ const term = require('terminal-kit').terminal;
 
 const { parseCommandType, clearDB } = require('./utils');
 const { addProduct, listProducts } = require('./services/product');
+const { addWarehouse, listWarehouses, listSingleWarehouse } = require('./services/warehouse');
 const commandTypes = require('./config/commandTypes');
 
 
-const history = ['ADD', 'S', 'U', 'LIST'];
+const history = ['ADD', 'STOCK', 'UNSTOCK', 'LIST', 'CLEAR'];
 
 const autoComplete = [
   'ADD PRODUCT "<product_name>" <SKU>',
@@ -15,6 +16,7 @@ const autoComplete = [
   'LIST PRODUCTS',
   'LIST WAREHOUSES',
   'LIST WAREHOUSE <warehouse_#>',
+  'CLEAR'
 ];
 
 const app = () => {
@@ -38,23 +40,50 @@ const renderInputField = () => {
         terminal.red(`${error}`);
       }
       const commandType = parseCommandType(input);
-      if (commandType === commandTypes.addProduct) {
-        addProduct(input);
-      } else if (commandType === commandTypes.addWarehouse) {
 
-      } else if (commandType === commandTypes.stock) {
-
-      } else if (commandType === commandTypes.unstock) {
-
-      } else if (commandType === commandTypes.listProducts) {
-        listProducts();
-      } else if (commandType === commandTypes.listWarehouses) {
-
-      } else if (commandType === commandTypes.listWarehouse) {
-
-      } else if (commandType === commandTypes.clear) {
-        clearDB();
+      switch (commandType) {
+        case commandTypes.addProduct:
+          addProduct(input);
+          break;
+        case commandTypes.addWarehouse:
+          addWarehouse(input);
+          break;
+        case commandTypes.stock:
+          break;
+        case commandTypes.unstock:
+          break;
+        case commandTypes.listProducts:
+          listProducts();
+          break;
+        case commandTypes.listWarehouses:
+          listWarehouses();
+          break;
+        case commandTypes.listWarehouse:
+          listSingleWarehouse(input);
+          break;
+        case commandTypes.clear:
+          clearDB();
+          break;
+        default:
+          break;
       }
+      // if (commandType === commandTypes.addProduct) {
+      //   addProduct(input);
+      // } else if (commandType === commandTypes.addWarehouse) {
+      //   addWarehouse(input);
+      // } else if (commandType === commandTypes.stock) {
+
+      // } else if (commandType === commandTypes.unstock) {
+
+      // } else if (commandType === commandTypes.listProducts) {
+      //   listProducts();
+      // } else if (commandType === commandTypes.listWarehouses) {
+      //   listWarehouses()
+      // } else if (commandType === commandTypes.listWarehouse) {
+      //   listSingleWarehouse(input);
+      // } else if (commandType === commandTypes.clear) {
+      //   clearDB();
+      // }
       renderInputField();
     }
   );
