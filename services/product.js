@@ -75,7 +75,17 @@ module.exports = {
     })
     console.log('table: ', table)
     table.unshift(['Product Name', 'SKU'])
-    terminal.table(table)
+    terminal.table(table,{
+      hasBorder: true ,
+      contentHasMarkup: true ,
+      borderChars: 'lightRounded' ,
+      borderAttr: { color: 'blue' } ,
+      textAttr: { bgColor: 'default' } ,
+      firstCellTextAttr: { bgColor: 'blue' } ,
+      firstRowTextAttr: { bgColor: 'blue' } ,
+      width: 60 ,
+      fit: true   // Activate all expand/shrink + wordWrap
+    })
   }
 }
 
