@@ -1,4 +1,6 @@
 const { terminal } = require('terminal-kit');
+const fs = require('fs');
+
 const commandTypes = require('../config/commandTypes');
 
 module.exports = {
@@ -38,4 +40,14 @@ module.exports = {
     const skuRegex = /^[a-zA-Z\d]{8}-[a-zA-Z\d]{4}-[a-zA-Z\d]{4}-[a-zA-Z\d]{4}-[a-zA-Z\d]{12}$/
     return skuRegex.test(sku);
   },
+
+  readJsonfile: () => {
+    try {
+      const file = fs.readFileSync('rooms-to-go.json', 'utf8');
+      console.log('file: ', file)
+      return JSON.parse(file);
+    } catch (err) {
+      console.log('err: ', err)
+    }
+  }
 }
