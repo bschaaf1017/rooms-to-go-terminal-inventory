@@ -18,13 +18,13 @@ module.exports = {
       && input.length !== 5
       || (input.length === 5 && input[4] === '')
     ) {
-      terminal.red('Invalid ADD PRODUCT format, enter command like this: ').italic('ADD PRODUCT "<product_name>" <SKU>');
+      terminal.red('\nInvalid ADD PRODUCT format, enter command like this: ').italic('ADD PRODUCT "<product_name>" <SKU>');
       return;
     }
 
     const isValidSKU = validateSKU(input[4])
     if (!isValidSKU) {
-      terminal.red('Invalid input SKU, should be in format: ').italic('abcd1234-ab12-ab12-ab12-abcdef123456');
+      terminal.red('\nInvalid input SKU, should be in format: ').italic('abcd1234-ab12-ab12-ab12-abcdef123456');
       return;
     }
 
@@ -43,7 +43,7 @@ module.exports = {
     }
 
     if (isSameSKU) {
-      terminal.red(`A product with SKU: ${sku} already exists.`);
+      terminal.red(`\nA product with SKU: ${sku} already exists.`);
       return;
     }
 
@@ -59,7 +59,7 @@ module.exports = {
     }
 
     writeToJsonFile(newFile);
-    terminal.green(`Product ${productName} added sucsessfully!`)
+    terminal.green(`\nProduct ${productName} added sucsessfully!`)
 
   },
 
@@ -71,7 +71,7 @@ module.exports = {
       return [product.name, product.sku]
     })
     if (table.length === 0) {
-      terminal.red('There are no prducts in the database.');
+      terminal.red('\nThere are no prducts in the database.');
       return;
     }
     table.unshift(['Product Name', 'SKU'])

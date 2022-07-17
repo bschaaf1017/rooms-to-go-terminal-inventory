@@ -8,4 +8,5 @@ const commandTypes = {
   listWarehouse: 'LIST WAREHOUSE',
   clear: 'CLEAR',
 }
+
 module.exports = commandTypes

@@ -8,19 +8,16 @@ const {
 module.exports = {
   addWarehouse: (input) => {
     input = input.split(' ')
-    console.log('input: ', input)
     if (input.length <= 2) {
-      terminal.red('You must provide a Warhouse number');
+      terminal.red('\nYou must provide a Warhouse number');
       return;
     }
 
     const warehouseNum = parseInt(input[2]);
     const stockLimit = input[3] ? parseInt(input[3]) : null;
-    console.log('warehouseNum: ', warehouseNum)
     const file = readJsonfile();
     const { warehouses } = file;
     let isSameNum = false;
-    console.log('warehouses: ', warehouses)
 
     for (let i = 0; i < warehouses.length; i++) {
       if (warehouses[i].warehouseNum === warehouseNum) {
@@ -30,7 +27,7 @@ module.exports = {
     }
 
     if (isSameNum) {
-      terminal.red(`A warehouse with number: ${warehouseNum} already exists.`);
+      terminal.red(`\nA warehouse with number: ${warehouseNum} already exists.`);
       return;
     }
 
@@ -46,7 +43,7 @@ module.exports = {
     }
 
     writeToJsonFile(newFile);
-    terminal.green(`Warehouse # ${warehouseNum} added sucsessfully!`)
+    terminal.green(`\nWarehouse # ${warehouseNum} added sucsessfully!`)
 
   },
 
@@ -62,7 +59,7 @@ module.exports = {
       return;
     }
     table.unshift(['Warehouse #', 'Stock Limit'])
-    terminal('\n')
+    terminal('\n');
     terminal.table(table,{
       hasBorder: true ,
       contentHasMarkup: true ,
