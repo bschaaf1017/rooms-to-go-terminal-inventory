@@ -19,7 +19,6 @@ module.exports = {
     const stockLimit = input[3] ? parseInt(input[3]) : null;
     const file = readJsonfile();
     const { warehouses } = file;
-    let isSameNum = false;
 
     if (warehouses[warehouseNum]) {
       terminal.red(`\nA warehouse with number: ${warehouseNum} already exists.`);
@@ -29,18 +28,17 @@ module.exports = {
     const newFile = {
       ...file,
       warehouses: {
-        ... warehouses,
+        ...warehouses,
         [warehouseNum]: {
           warehouseNum,
           stockLimit,
           stockedProducts: {},
-        }
-      }
-    }
+        },
+      },
+    };
 
     writeToJsonFile(newFile);
-    terminal.green(`\nWarehouse # ${warehouseNum} added sucsessfully!`)
-
+    terminal.green(`\nWarehouse # ${warehouseNum} added sucsessfully!`);
   },
 
   listWarehouses: () => {
@@ -53,14 +51,14 @@ module.exports = {
     }
 
     const table = [];
-    for (let key in warehouses) {
+    for (const key in warehouses) {
       table.push([
         warehouses[key].warehouseNum,
         warehouses[key].stockLimit ? warehouses[key].stockLimit : 'Unlimited',
       ]);
     }
 
-    table.unshift(['Warehouse #', 'Stock Limit'])
+    table.unshift(['Warehouse #', 'Stock Limit']);
     terminal('\n');
     terminal.table(table, {
       hasBorder: true,
@@ -106,7 +104,7 @@ module.exports = {
     }
 
     const table = [];
-    for (let key in stockedProducts) {
+    for (const key in stockedProducts) {
       table.push([
         stockedProducts[key].productName,
         key,
@@ -126,7 +124,5 @@ module.exports = {
       width: 80,
       fit: true,
     });
-
-    return;
   },
-}
+};

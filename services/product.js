@@ -14,16 +14,14 @@ module.exports = {
     input = input.split(/\s*(")\s*/);
 
     if (
-      input[1] !== '"'
-      && input[3] !== '"'
-      && input.length !== 5
+      (input[1] !== '"' && input[3] !== '"' && input.length !== 5)
       || (input.length === 5 && input[4] === '')
     ) {
       terminal.red('\nInvalid ADD PRODUCT format, enter command like this: ').italic('ADD PRODUCT "<product_name>" <SKU>');
       return;
     }
 
-    const isValidSKU = validateSKU(input[4])
+    const isValidSKU = validateSKU(input[4]);
     if (!isValidSKU) {
       terminal.red('\nInvalid input SKU, should be in format: ').italic('abcd1234-ab12-ab12-ab12-abcdef123456');
       return;
@@ -31,7 +29,6 @@ module.exports = {
 
     const productName = input[2];
     const sku = input[4];
-    let isSameSKU = false;
 
     const file = readJsonfile();
     const { products } = file;
@@ -47,14 +44,13 @@ module.exports = {
         ...products,
         [sku]: {
           name: productName,
-          sku: sku,
+          sku,
         },
       },
-    }
+    };
 
     writeToJsonFile(newFile);
-    terminal.green(`\nProduct ${productName} added sucsessfully!`)
-
+    terminal.green(`\nProduct ${productName} added sucsessfully!`);
   },
 
   listProducts: () => {
@@ -67,12 +63,12 @@ module.exports = {
     }
 
     const table = [];
-    for (let key in products) {
-      table.push([products[key].name, products[key].sku])
+    for (const key in products) {
+      table.push([products[key].name, products[key].sku]);
     }
 
-    table.unshift(['Product Name', 'SKU'])
-    terminal('\n')
+    table.unshift(['Product Name', 'SKU']);
+    terminal('\n');
     terminal.table(table, {
       hasBorder: true,
       contentHasMarkup: true,
@@ -83,6 +79,6 @@ module.exports = {
       firstRowTextAttr: { bgColor: 'blue' },
       width: 80,
       fit: true,
-    })
-  }
-}
+    });
+  },
+};

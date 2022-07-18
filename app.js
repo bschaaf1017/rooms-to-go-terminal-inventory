@@ -6,7 +6,6 @@ const { addWarehouse, listWarehouses, listSingleWarehouse } = require('./service
 const { stockProduct, unstockProduct } = require('./services/stock');
 const commandTypes = require('./config/commandTypes');
 
-
 const history = ['ADD', 'STOCK', 'UNSTOCK', 'LIST', 'CLEAR'];
 
 const autoComplete = [
@@ -17,28 +16,16 @@ const autoComplete = [
   'LIST PRODUCTS',
   'LIST WAREHOUSES',
   'LIST WAREHOUSE <warehouse_#>',
-  'CLEAR'
+  'CLEAR',
 ];
 
-const app = () => {
-  term.bold.green( 'Welcome to my interactive Rooms-to-Go warehouse and inventory terminal app') ;
-
-  term.on( 'key' , (name , matches , data) => {
-    if (name === 'CTRL_C') {
-      process.exit();
-    }
-  }) ;
-
-  renderInputField();
-}
-
 const renderInputField = () => {
-  term.bold.magenta('\nEnter command: ')
+  term.bold.magenta('\nEnter command: ');
   term.inputField(
-    { history: history , autoComplete: autoComplete , autoCompleteMenu: true } ,
-    ( error , input ) => {
+    { history, autoComplete, autoCompleteMenu: true },
+    (error, input) => {
       if (error) {
-        terminal.red(`${error}`);
+        term.red(`${error}`);
       }
       const commandType = parseCommandType(input);
 
@@ -70,26 +57,21 @@ const renderInputField = () => {
         default:
           break;
       }
-      // if (commandType === commandTypes.addProduct) {
-      //   addProduct(input);
-      // } else if (commandType === commandTypes.addWarehouse) {
-      //   addWarehouse(input);
-      // } else if (commandType === commandTypes.stock) {
-
-      // } else if (commandType === commandTypes.unstock) {
-
-      // } else if (commandType === commandTypes.listProducts) {
-      //   listProducts();
-      // } else if (commandType === commandTypes.listWarehouses) {
-      //   listWarehouses()
-      // } else if (commandType === commandTypes.listWarehouse) {
-      //   listSingleWarehouse(input);
-      // } else if (commandType === commandTypes.clear) {
-      //   clearDB();
-      // }
       renderInputField();
-    }
+    },
   );
-}
+};
+
+const app = () => {
+  term.bold.green('Welcome to my interactive Rooms-to-Go warehouse and inventory terminal app');
+
+  term.on('key', (name, matches, data) => {
+    if (name === 'CTRL_C') {
+      process.exit();
+    }
+  });
+
+  renderInputField();
+};
 
 app();
