@@ -1,4 +1,5 @@
 const { terminal } = require('terminal-kit');
+const _ = require('lodash');
 
 const {
   validateSKU,
@@ -60,24 +61,28 @@ module.exports = {
     const file = readJsonfile();
     const { products } = file;
 
-    const table = products.map((product) => {
-      return [product.name, product.sku]
-    })
-    if (table.length === 0) {
+    if (_.isEmpty(products)) {
       terminal.red('\nThere are no prducts in the database.');
       return;
     }
+
+    const table = [];
+    for (let key in products) {
+      table.push([products[key].name, products[key].sku])
+    }
+
     table.unshift(['Product Name', 'SKU'])
-    terminal.table(table,{
-      hasBorder: true ,
-      contentHasMarkup: true ,
-      borderChars: 'lightRounded' ,
-      borderAttr: { color: 'blue' } ,
-      textAttr: { bgColor: 'default' } ,
-      firstCellTextAttr: { bgColor: 'blue' } ,
-      firstRowTextAttr: { bgColor: 'blue' } ,
-      width: 80 ,
-      fit: true
+    terminal('\n')
+    terminal.table(table, {
+      hasBorder: true,
+      contentHasMarkup: true,
+      borderChars: 'lightRounded',
+      borderAttr: { color: 'blue' },
+      textAttr: { bgColor: 'default' },
+      firstCellTextAttr: { bgColor: 'blue' },
+      firstRowTextAttr: { bgColor: 'blue' },
+      width: 80,
+      fit: true,
     })
   }
 }
