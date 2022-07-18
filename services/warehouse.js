@@ -32,7 +32,8 @@ module.exports = {
         ... warehouses,
         [warehouseNum]: {
           warehouseNum,
-          stockLimit
+          stockLimit,
+          stockedProducts: {},
         }
       }
     }

@@ -16,7 +16,7 @@ module.exports = {
     }
 
     const inputSku = input[1];
-    const inputWarehouseNum = parseInt(input[2]);
+    const inputWarehouseNum = input[2];
     const inputQty = parseInt(input[3]);
 
     // validate sku
@@ -31,97 +31,66 @@ module.exports = {
     console.log('products: ', products)
     console.log('warehouses: ', warehouses)
 
-    let prodName, warehouseNum, warehouseLimit;
-
     // make sure there is a product with the input sku
-    for (let i = 0; i < products.length; i++) {
-      if (products[i].sku === inputSku) {
-        prodName = products[i].name;
-        break;
-      }
-    }
-
-    if (prodName === undefined) {
+    if (products[inputSku] === undefined) {
       terminal.red('\nThere are no products with that SKU, create a new product before stocking it in a warehouse');
       return;
     }
 
     // make sure there is a warehouse with the input warehouse number
-    // could make this more efficient by either updating stock limit in this loop or splicing warehouse obj out of the array and adding it back later..
-    for (let i = 0; i < warehouses.length; i++) {
-      if (warehouses[i].warehouseNum === inputWarehouseNum) {
-        warehouseLimit = warehouses[i].stockLimit ? warehouses[i].stockLimit : null;
-        warehouseNum = warehouses[i].warehouseNum;
-        break;
-      }
-    }
-
-    if (warehouseNum === undefined) {
-      terminal.red('\nThere are no warehouses with that number,create a new warehouse before stocking it with products');
+    if (warehouses[inputWarehouseNum] === undefined) {
+      terminal.red('\nThere are no warehouses with that number, create a new warehouse before stocking it with products');
       return;
     }
 
-    console.log('productName: ', prodName, ' warehouseNum: ', warehouseNum, ' warehouseLimit: ', warehouseLimit)
-
-    let newStockLimit = null;
-
     // check if there is enough available space for the product in the warehouse
-    if (warehouseLimit) {
-      if (inputQty > warehouseLimit) {
-        terminal.red(`\nThere is only `).blue.bold(`${warehouseLimit}`).red(' stock space in warehouse ').blue.bold(`${warehouseNum}`).red(', consider a warehouse with more stock space available.');
+    if (warehouses[inputWarehouseNum].stockLimit) {
+      if (inputQty > warehouses[inputWarehouseNum].stockLimit) {
+        terminal.red(`\nThere is only `)
+          .blue.bold(`${warehouses[inputWarehouseNum].stockLimit}`)
+          .red(' stock space in warehouse ')
+          .blue.bold(`${inputWarehouseNum}`)
+          .red(', consider a warehouse with more stock space available.');
         return;
       }
-      newStockLimit = warehouseLimit - inputQty;
-    }
-    console.log('newStockLimit:', newStockLimit)
 
-    //update warehouse stock limit if needed
-    if (newStockLimit) {
-      for (let i = 0; i < warehouses.length; i++) {
-        if (warehouses[i].warehouseNum === inputWarehouseNum) {
-          warehouses[i].stockLimit = newStockLimit;
-          break;
-        }
-      }
+      //update warehouse stock limit to take into account what is being added
+      warehouses[inputWarehouseNum].stockLimit -= inputQty;
     }
-    console.log('warehouses after update: ', warehouses)
+    console.log('warehouses after update:', warehouses)
 
     // check to see if this product already has some stock at that warehouse and increment,
     // writeToJsonFile only updated warehouse data if necessary and exit function
-    for (let i = 0; i < stock.length; i++) {
-      if (stock[i].sku === inputSku && stock[i].warehouseNum === inputWarehouseNum) {
-        const tempQty = stock[i].qty;
-        stock[i].qty += inputQty;
-        writeToJsonFile({
-          ...file,
-          warehouses: [...warehouses],
-          stock: [...stock],
-        });
-        terminal.green('Successfully updated the quantity of ')
-          .blue.bold(`${stock[i].productName}`)
-          .green(' from ')
-          .blue.bold(`${tempQty}`)
-          .green(' to ')
-          .blue.bold(`${stock[i].qty}`);
+    if (warehouses[inputWarehouseNum].stockedProducts[inputSku]) {
+      const tempQty = warehouses[inputWarehouseNum].stockedProducts[inputSku].qty;
+      warehouses[inputWarehouseNum].stockedProducts[inputSku].qty += inputQty;
+      writeToJsonFile({
+        ...file,
+        warehouses: {
+          ...warehouses,
+        },
+      });
+      terminal.green('Successfully updated the quantity of ')
+        .blue.bold(`${products[inputSku].name}`)
+        .green(' from ')
+        .blue.bold(`${tempQty}`)
+        .green(' to ')
+        .blue.bold(`${warehouses[inputWarehouseNum].stockedProducts[inputSku].qty}`);
 
-        return;
-      }
+      return;
     }
 
-    console.log('here099090909090909')
-
-    // add to stock array if this product not already existing at that warehouse
-    const newStockData = {
-      warehouseNum: inputWarehouseNum,
-      productName: prodName,
-      sku: inputSku,
-      qty: inputQty,
+    warehouses[inputWarehouseNum].stockedProducts = {
+      [inputSku]: {
+        productName: products[inputSku].name,
+        qty: inputQty,
+      },
     }
-
     writeToJsonFile({
       ...file,
-      warehouses: [...warehouses],
-      stock: [...stock, newStockData]
+      warehouses: {
+        ...warehouses,
+      }
     })
 
     console.log('readJsonfile: ', readJsonfile())
@@ -141,3 +110,4 @@ module.exports = {
   qty: qty
 }
 */
+
