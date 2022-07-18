@@ -61,6 +61,7 @@ module.exports = {
 
     // check to see if this product already has some stock at that warehouse and increment,
     // writeToJsonFile only updated warehouse data if necessary and exit function
+    console.log('do they equal?? ', Object.keys(warehouses[inputWarehouseNum].stockedProducts)[0] === inputSku)
     if (warehouses[inputWarehouseNum].stockedProducts[inputSku]) {
       const tempQty = warehouses[inputWarehouseNum].stockedProducts[inputSku].qty;
       warehouses[inputWarehouseNum].stockedProducts[inputSku].qty += inputQty;
@@ -81,6 +82,7 @@ module.exports = {
     }
 
     warehouses[inputWarehouseNum].stockedProducts = {
+      ...warehouses[inputWarehouseNum].stockedProducts,
       [inputSku]: {
         productName: products[inputSku].name,
         qty: inputQty,
@@ -91,10 +93,16 @@ module.exports = {
       warehouses: {
         ...warehouses,
       }
-    })
+    });
 
-    console.log('readJsonfile: ', readJsonfile())
+    terminal.green('Successfully added ')
+        .blue.bold(`${inputQty}`)
+        .green(' of ')
+        .blue.bold(`${products[inputSku].name}`)
+        .green(' to warehouse ')
+        .blue.bold(`${inputWarehouseNum}`);
 
+    return;
   },
 
   unstockProduct: (input) => {
