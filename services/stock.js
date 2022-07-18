@@ -29,8 +29,8 @@ module.exports = {
 
     const file = readJsonfile();
     const { products, warehouses } = file;
-    console.log('products: ', products)
-    console.log('warehouses: ', warehouses)
+    console.log('products: ', products);
+    console.log('warehouses: ', warehouses);
 
     // make sure there is a product with the input sku
     if (products[inputSku] === undefined) {
@@ -47,7 +47,7 @@ module.exports = {
     // check if there is enough available space for the product in the warehouse
     if (warehouses[inputWarehouseNum].stockLimit) {
       if (inputQty > warehouses[inputWarehouseNum].stockLimit) {
-        terminal.red(`\nThere is only `)
+        terminal.red('\nThere is only ')
           .blue.bold(`${warehouses[inputWarehouseNum].stockLimit}`)
           .red(' stock space in warehouse ')
           .blue.bold(`${inputWarehouseNum}`)
@@ -55,10 +55,10 @@ module.exports = {
         return;
       }
 
-      //update warehouse stock limit to take into account what is being added
+      // update warehouse stock limit to take into account what is being added
       warehouses[inputWarehouseNum].stockLimit -= inputQty;
     }
-    console.log('warehouses after update:', warehouses)
+    console.log('warehouses after update:', warehouses);
 
     // check to see if this product already has some stock at that warehouse and increment,
     // writeToJsonFile only updated warehouse data if necessary and exit function
@@ -87,12 +87,12 @@ module.exports = {
         productName: products[inputSku].name,
         qty: inputQty,
       },
-    }
+    };
     writeToJsonFile({
       ...file,
       warehouses: {
         ...warehouses,
-      }
+      },
     });
 
     terminal.green('Successfully added ')
@@ -101,8 +101,6 @@ module.exports = {
       .blue.bold(`${products[inputSku].name}`)
       .green(' to warehouse ')
       .blue.bold(`${inputWarehouseNum}`);
-
-    return;
   },
 
   unstockProduct: (input) => {
@@ -126,8 +124,8 @@ module.exports = {
 
     const file = readJsonfile();
     const { products, warehouses } = file;
-    console.log('products: ', products)
-    console.log('warehouses: ', warehouses)
+    console.log('products: ', products);
+    console.log('warehouses: ', warehouses);
 
     // make sure there is a product with the input sku
     if (products[inputSku] === undefined) {
@@ -142,7 +140,7 @@ module.exports = {
     }
 
     const { stockedProducts } = warehouses[inputWarehouseNum];
-    console.log('stockedProducts: ', stockedProducts)
+    console.log('stockedProducts: ', stockedProducts);
     // make sure input warehouse has that product in stock before unstocking
     if (stockedProducts[inputSku] === undefined) {
       terminal.red('\nWarehouse ')
@@ -153,7 +151,7 @@ module.exports = {
       return;
     }
 
-    let tempQty = stockedProducts[inputSku].qty;
+    const tempQty = stockedProducts[inputSku].qty;
     // if inputQty > than current stock set current stock to 0 or remove from stock all together??
     if (stockedProducts[inputSku].qty < inputQty) {
       stockedProducts[inputSku].qty = 0;
@@ -169,10 +167,10 @@ module.exports = {
           ...warehouses[inputWarehouseNum],
           stockedProducts: {
             ...warehouses[inputWarehouseNum].stockedProducts,
-          }
-        }
-      }
-    })
+          },
+        },
+      },
+    });
 
     terminal.green('\nWarehouse ')
       .blue.bold(`${inputWarehouseNum}'s`)
@@ -182,9 +180,5 @@ module.exports = {
       .blue.bold(`${tempQty}`)
       .green(' to ')
       .blue.bold(`${stockedProducts[inputSku].qty}`);
-
-    return;
   },
-}
-
-
+};

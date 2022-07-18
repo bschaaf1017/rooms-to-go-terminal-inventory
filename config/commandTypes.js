@@ -7,6 +7,7 @@ const commandTypes = {
   listWarehouses: 'LIST WAREHOUSES',
   listWarehouse: 'LIST WAREHOUSE',
   clear: 'CLEAR',
-}
+  debug: 'DEBUG',
+};
 
-module.exports = commandTypes
+module.exports = commandTypes;

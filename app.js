@@ -4,6 +4,7 @@ const { parseCommandType, clearDB } = require('./utils');
 const { addProduct, listProducts } = require('./services/product');
 const { addWarehouse, listWarehouses, listSingleWarehouse } = require('./services/warehouse');
 const { stockProduct, unstockProduct } = require('./services/stock');
+const { addCommands, listCommands } = require('./services/debug');
 const commandTypes = require('./config/commandTypes');
 
 const history = ['ADD', 'STOCK', 'UNSTOCK', 'LIST', 'CLEAR'];
@@ -17,7 +18,10 @@ const autoComplete = [
   'LIST WAREHOUSES',
   'LIST WAREHOUSE <warehouse_#>',
   'CLEAR',
+  'DEBUG',
 ];
+
+let enteredCommands = [];
 
 const renderInputField = () => {
   term.bold.magenta('\nEnter command: ');
@@ -27,6 +31,17 @@ const renderInputField = () => {
       if (error) {
         term.red(`${error}`);
       }
+      // add command to array and check if it length is 2
+      enteredCommands.push({
+        time: new Date().toLocaleString(),
+        input,
+      });
+
+      if (enteredCommands.length === 2) {
+        addCommands(enteredCommands);
+        enteredCommands = [];
+      }
+
       const commandType = parseCommandType(input);
 
       switch (commandType) {
@@ -54,6 +69,9 @@ const renderInputField = () => {
         case commandTypes.clear:
           clearDB();
           break;
+        case commandTypes.debug:
+          listCommands();
+          break;
         default:
           break;
       }
@@ -67,6 +85,10 @@ const app = () => {
 
   term.on('key', (name, matches, data) => {
     if (name === 'CTRL_C') {
+      // if there is only one command in the enteredCommands array write to file before exit
+      if (enteredCommands.length > 0) {
+        addCommands(enteredCommands);
+      }
       process.exit();
     }
   });

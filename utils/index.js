@@ -27,6 +27,10 @@ module.exports = {
           commandList[i] === commandTypes.clear
           && inputCommand[0] === commandList[i]
         )
+        || (
+          commandList[i] === commandTypes.debug
+          && inputCommand[0] === commandList[i]
+        )
       ) {
         return commandList[i];
       }
@@ -50,7 +54,6 @@ module.exports = {
     } catch (err) {
       console.log('err: ', err);
     }
-    return;
   },
 
   writeToJsonFile: (data) => {
@@ -66,7 +69,7 @@ module.exports = {
     const newFile = JSON.stringify({
       products: {},
       warehouses: {},
-      stock: [],
+      commands: [],
     });
     try {
       fs.writeFileSync('rooms-to-go.json', newFile);
