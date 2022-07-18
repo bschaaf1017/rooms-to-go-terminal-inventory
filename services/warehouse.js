@@ -1,4 +1,5 @@
 const { terminal } = require('terminal-kit');
+const _ = require('lodash');
 
 const {
   readJsonfile,
@@ -7,46 +8,38 @@ const {
 
 module.exports = {
   addWarehouse: (input) => {
-    input = input.split(' ')
-    console.log('input: ', input)
+    input = input.split(' ');
+
     if (input.length <= 2) {
-      terminal.red('You must provide a Warhouse number');
+      terminal.red('\nYou must provide a Warhouse number');
       return;
     }
 
-    const warehouseNum = parseInt(input[2]);
+    const warehouseNum = input[2];
     const stockLimit = input[3] ? parseInt(input[3]) : null;
-    console.log('warehouseNum: ', warehouseNum)
     const file = readJsonfile();
     const { warehouses } = file;
     let isSameNum = false;
-    console.log('warehouses: ', warehouses)
 
-    for (let i = 0; i < warehouses.length; i++) {
-      if (warehouses[i].warehouseNum === warehouseNum) {
-        isSameNum = true;
-        break;
-      }
-    }
-
-    if (isSameNum) {
-      terminal.red(`A warehouse with number: ${warehouseNum} already exists.`);
+    if (warehouses[warehouseNum]) {
+      terminal.red(`\nA warehouse with number: ${warehouseNum} already exists.`);
       return;
     }
 
     const newFile = {
       ...file,
-      warehouses: [
+      warehouses: {
         ... warehouses,
-        {
+        [warehouseNum]: {
           warehouseNum,
-          stockLimit
+          stockLimit,
+          stockedProducts: {},
         }
-      ]
+      }
     }
 
     writeToJsonFile(newFile);
-    terminal.green(`Warehouse # ${warehouseNum} added sucsessfully!`)
+    terminal.green(`\nWarehouse # ${warehouseNum} added sucsessfully!`)
 
   },
 
@@ -54,15 +47,21 @@ module.exports = {
     const file = readJsonfile();
     const { warehouses } = file;
 
-    const table = warehouses.map((warehouse) => {
-      return [warehouse.warehouseNum, warehouse.stockLimit ? warehouse.stockLimit : 'Unlimited']
-    })
-    if (table.length === 0) {
+    if (_.isEmpty(warehouses)) {
       terminal.red('\nThere are no warehouses in the database.');
       return;
     }
+
+    const table = [];
+    for (let key in warehouses) {
+      table.push([
+        warehouses[key].warehouseNum,
+        warehouses[key].stockLimit ? warehouses[key].stockLimit : 'Unlimited'
+      ]);
+    }
+
     table.unshift(['Warehouse #', 'Stock Limit'])
-    terminal('\n')
+    terminal('\n');
     terminal.table(table,{
       hasBorder: true ,
       contentHasMarkup: true ,

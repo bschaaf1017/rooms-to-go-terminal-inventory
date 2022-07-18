@@ -1,4 +1,5 @@
 const { terminal } = require('terminal-kit');
+const _ = require('lodash');
 
 const {
   validateSKU,
@@ -18,13 +19,13 @@ module.exports = {
       && input.length !== 5
       || (input.length === 5 && input[4] === '')
     ) {
-      terminal.red('Invalid ADD PRODUCT format, enter command like this: ').italic('ADD PRODUCT "<product_name>" <SKU>');
+      terminal.red('\nInvalid ADD PRODUCT format, enter command like this: ').italic('ADD PRODUCT "<product_name>" <SKU>');
       return;
     }
 
     const isValidSKU = validateSKU(input[4])
     if (!isValidSKU) {
-      terminal.red('Invalid input SKU, should be in format: ').italic('abcd1234-ab12-ab12-ab12-abcdef123456');
+      terminal.red('\nInvalid input SKU, should be in format: ').italic('abcd1234-ab12-ab12-ab12-abcdef123456');
       return;
     }
 
@@ -35,31 +36,24 @@ module.exports = {
     const file = readJsonfile();
     const { products } = file;
 
-    for (let i = 0; i < products.length; i++) {
-      if (products[i].sku === sku) {
-        isSameSKU = true;
-        break;
-      }
-    }
-
-    if (isSameSKU) {
-      terminal.red(`A product with SKU: ${sku} already exists.`);
+    if (products[sku]) {
+      terminal.red(`\nA product with SKU: ${sku} already exists.`);
       return;
     }
 
     const newFile = {
       ...file,
-      products: [
-        ... products,
-        {
+      products: {
+        ...products,
+        [sku]: {
           name: productName,
-          sku
-        }
-      ]
+          sku: sku,
+        },
+      },
     }
 
     writeToJsonFile(newFile);
-    terminal.green(`Product ${productName} added sucsessfully!`)
+    terminal.green(`\nProduct ${productName} added sucsessfully!`)
 
   },
 
@@ -67,24 +61,28 @@ module.exports = {
     const file = readJsonfile();
     const { products } = file;
 
-    const table = products.map((product) => {
-      return [product.name, product.sku]
-    })
-    if (table.length === 0) {
-      terminal.red('There are no prducts in the database.');
+    if (_.isEmpty(products)) {
+      terminal.red('\nThere are no prducts in the database.');
       return;
     }
+
+    const table = [];
+    for (let key in products) {
+      table.push([products[key].name, products[key].sku])
+    }
+
     table.unshift(['Product Name', 'SKU'])
-    terminal.table(table,{
-      hasBorder: true ,
-      contentHasMarkup: true ,
-      borderChars: 'lightRounded' ,
-      borderAttr: { color: 'blue' } ,
-      textAttr: { bgColor: 'default' } ,
-      firstCellTextAttr: { bgColor: 'blue' } ,
-      firstRowTextAttr: { bgColor: 'blue' } ,
-      width: 80 ,
-      fit: true
+    terminal('\n')
+    terminal.table(table, {
+      hasBorder: true,
+      contentHasMarkup: true,
+      borderChars: 'lightRounded',
+      borderAttr: { color: 'blue' },
+      textAttr: { bgColor: 'default' },
+      firstCellTextAttr: { bgColor: 'blue' },
+      firstRowTextAttr: { bgColor: 'blue' },
+      width: 80,
+      fit: true,
     })
   }
 }

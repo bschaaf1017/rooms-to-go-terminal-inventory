@@ -65,8 +65,8 @@ module.exports = {
 
   clearDB: () => {
     const newFile = JSON.stringify({
-      products: [],
-      warehouses: [],
+      products: {},
+      warehouses: {},
       stock: []
     })
     try {

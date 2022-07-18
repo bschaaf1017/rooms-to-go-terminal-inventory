@@ -3,16 +3,17 @@ const term = require('terminal-kit').terminal;
 const { parseCommandType, clearDB } = require('./utils');
 const { addProduct, listProducts } = require('./services/product');
 const { addWarehouse, listWarehouses, listSingleWarehouse } = require('./services/warehouse');
+const { stockProduct, unstockProduct } = require('./services/stock');
 const commandTypes = require('./config/commandTypes');
 
 
 const history = ['ADD', 'STOCK', 'UNSTOCK', 'LIST', 'CLEAR'];
 
 const autoComplete = [
-  'ADD PRODUCT "<product_name>" <SKU>',
-  'ADD WAREHOUSE WAREHOUSE# [STOCK_LIMIT]',
-  'STOCK SKU WAREHOUSE# QTY',
-  'UNSTOCK <SKU> <warehouse_#> <qty>',
+  'ADD PRODUCT "<product_name>" <sku>',
+  'ADD WAREHOUSE <warehouse_num> [stock_limit]',
+  'STOCK <sku> <warhouse_num> <qty>',
+  'UNSTOCK <sku> <warehouse_num> <qty>',
   'LIST PRODUCTS',
   'LIST WAREHOUSES',
   'LIST WAREHOUSE <warehouse_#>',
@@ -49,8 +50,10 @@ const renderInputField = () => {
           addWarehouse(input);
           break;
         case commandTypes.stock:
+          stockProduct(input);
           break;
         case commandTypes.unstock:
+          unstockProduct(input);
           break;
         case commandTypes.listProducts:
           listProducts();
