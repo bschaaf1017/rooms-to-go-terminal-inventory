@@ -35,27 +35,32 @@ module.exports = {
     const file = readJsonfile();
     const { products } = file;
 
-    for (let i = 0; i < products.length; i++) {
-      if (products[i].sku === sku) {
-        isSameSKU = true;
-        break;
-      }
-    }
-
-    if (isSameSKU) {
+    if (products[sku]) {
       terminal.red(`\nA product with SKU: ${sku} already exists.`);
       return;
     }
 
+    // for (let i = 0; i < products.length; i++) {
+    //   if (products[i].sku === sku) {
+    //     isSameSKU = true;
+    //     break;
+    //   }
+    // }
+
+    // if (isSameSKU) {
+    //   terminal.red(`\nA product with SKU: ${sku} already exists.`);
+    //   return;
+    // }
+
     const newFile = {
       ...file,
-      products: [
-        ... products,
-        {
+      products: {
+        ...products,
+        [sku]: {
           name: productName,
-          sku
-        }
-      ]
+          sku: sku,
+        },
+      },
     }
 
     writeToJsonFile(newFile);

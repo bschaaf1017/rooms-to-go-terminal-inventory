@@ -68,7 +68,7 @@ module.exports = {
     // check if there is enough available space for the product in the warehouse
     if (warehouseLimit) {
       if (inputQty > warehouseLimit) {
-        terminal.red(`\nThere is only ${warehouseLimit} stock space in warehouse ${warehouseNum}, consider a warehouse with more stock space available.`);
+        terminal.red(`\nThere is only `).blue.bold(`${warehouseLimit}`).red(' stock space in warehouse ').blue.bold(`${warehouseNum}`).red(', consider a warehouse with more stock space available.');
         return;
       }
       newStockLimit = warehouseLimit - inputQty;
@@ -86,6 +86,31 @@ module.exports = {
     }
     console.log('warehouses after update: ', warehouses)
 
+    // check to see if this product already has some stock at that warehouse and increment,
+    // writeToJsonFile only updated warehouse data if necessary and exit function
+    for (let i = 0; i < stock.length; i++) {
+      if (stock[i].sku === inputSku && stock[i].warehouseNum === inputWarehouseNum) {
+        const tempQty = stock[i].qty;
+        stock[i].qty += inputQty;
+        writeToJsonFile({
+          ...file,
+          warehouses: [...warehouses],
+          stock: [...stock],
+        });
+        terminal.green('Successfully updated the quantity of ')
+          .blue.bold(`${stock[i].productName}`)
+          .green(' from ')
+          .blue.bold(`${tempQty}`)
+          .green(' to ')
+          .blue.bold(`${stock[i].qty}`);
+
+        return;
+      }
+    }
+
+    console.log('here099090909090909')
+
+    // add to stock array if this product not already existing at that warehouse
     const newStockData = {
       warehouseNum: inputWarehouseNum,
       productName: prodName,
