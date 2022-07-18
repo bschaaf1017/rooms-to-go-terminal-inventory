@@ -56,26 +56,77 @@ module.exports = {
     for (let key in warehouses) {
       table.push([
         warehouses[key].warehouseNum,
-        warehouses[key].stockLimit ? warehouses[key].stockLimit : 'Unlimited'
+        warehouses[key].stockLimit ? warehouses[key].stockLimit : 'Unlimited',
       ]);
     }
 
     table.unshift(['Warehouse #', 'Stock Limit'])
     terminal('\n');
-    terminal.table(table,{
-      hasBorder: true ,
-      contentHasMarkup: true ,
-      borderChars: 'lightRounded' ,
-      borderAttr: { color: 'blue' } ,
-      textAttr: { bgColor: 'default' } ,
-      firstCellTextAttr: { bgColor: 'blue' } ,
-      firstRowTextAttr: { bgColor: 'blue' } ,
-      width: 80 ,
-      fit: true
-    })
+    terminal.table(table, {
+      hasBorder: true,
+      contentHasMarkup: true,
+      borderChars: 'lightRounded',
+      borderAttr: { color: 'blue' },
+      textAttr: { bgColor: 'default' },
+      firstCellTextAttr: { bgColor: 'blue' },
+      firstRowTextAttr: { bgColor: 'blue' },
+      width: 80,
+      fit: true,
+    });
   },
 
-  listSingleWarehouse: () => {
+  listSingleWarehouse: (input) => {
+    input = input.split(' ');
 
+    if (input.length !== 3 || input[2] === '') {
+      terminal.red('\nYou must provide a Warhouse number');
+      return;
+    }
+
+    const inputWarehouseNum = input[2];
+
+    const file = readJsonfile();
+    const { warehouses } = file;
+
+    if (warehouses[inputWarehouseNum] === undefined) {
+      terminal.red('\nThe Warhouse number you provided does not exist');
+      return;
+    }
+
+    const { stockedProducts } = warehouses[inputWarehouseNum];
+
+    if (_.isEmpty(stockedProducts)) {
+      terminal.red('\nWarhouse ')
+        .blue.bold(`${inputWarehouseNum}`)
+        .red(' doesnt have anything stocked in it yet but has space for ')
+        .blue.bold(`${warehouses[inputWarehouseNum].stockLimit}`)
+        .red(' products');
+
+      return;
+    }
+
+    const table = [];
+    for (let key in stockedProducts) {
+      table.push([
+        stockedProducts[key].productName,
+        key,
+        stockedProducts[key].qty,
+      ]);
+    }
+    table.unshift(['Item Name', 'SKU', 'QTY']);
+    terminal('\n');
+    terminal.table(table, {
+      hasBorder: true,
+      contentHasMarkup: true,
+      borderChars: 'lightRounded',
+      borderAttr: { color: 'blue' },
+      textAttr: { bgColor: 'default' },
+      firstCellTextAttr: { bgColor: 'blue' },
+      firstRowTextAttr: { bgColor: 'blue' },
+      width: 80,
+      fit: true,
+    });
+
+    return;
   },
 }

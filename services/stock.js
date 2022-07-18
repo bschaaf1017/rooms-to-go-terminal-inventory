@@ -10,7 +10,7 @@ module.exports = {
 
   stockProduct: (input) => {
     input = input.split(' ');
-    if (input.length !== 4) {
+    if (input.length !== 4 || input[3] === '') {
       terminal.red('\nInvalid STOCK input, please enter in this format: STOCK <sku> <warhouse_num> <qty>');
       return;
     }
@@ -106,7 +106,11 @@ module.exports = {
   },
 
   unstockProduct: (input) => {
-
+    input = input.split(' ');
+    if (input.length !== 4 || input[3] === '') {
+      terminal.red('\nInvalid UNSTOCK input, please enter in this format: UNSTOCK <sku> <warhouse_num> <qty>');
+      return;
+    }
   },
 }
 
