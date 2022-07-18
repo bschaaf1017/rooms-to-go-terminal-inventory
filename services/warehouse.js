@@ -1,4 +1,5 @@
 const { terminal } = require('terminal-kit');
+const _ = require('lodash');
 
 const {
   readJsonfile,
@@ -25,18 +26,6 @@ module.exports = {
       return;
     }
 
-    // for (let i = 0; i < warehouses.length; i++) {
-    //   if (warehouses[i].warehouseNum === warehouseNum) {
-    //     isSameNum = true;
-    //     break;
-    //   }
-    // }
-
-    // if (isSameNum) {
-    //   terminal.red(`\nA warehouse with number: ${warehouseNum} already exists.`);
-    //   return;
-    // }
-
     const newFile = {
       ...file,
       warehouses: {
@@ -57,13 +46,19 @@ module.exports = {
     const file = readJsonfile();
     const { warehouses } = file;
 
-    const table = warehouses.map((warehouse) => {
-      return [warehouse.warehouseNum, warehouse.stockLimit ? warehouse.stockLimit : 'Unlimited']
-    })
-    if (table.length === 0) {
+    if (_.isEmpty(warehouses)) {
       terminal.red('\nThere are no warehouses in the database.');
       return;
     }
+
+    const table = [];
+    for (let key in warehouses) {
+      table.push([
+        warehouses[key].warehouseNum,
+        warehouses[key].stockLimit ? warehouses[key].stockLimit : 'Unlimited'
+      ]);
+    }
+
     table.unshift(['Warehouse #', 'Stock Limit'])
     terminal('\n');
     terminal.table(table,{
