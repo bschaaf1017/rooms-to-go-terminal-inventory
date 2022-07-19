@@ -17,7 +17,7 @@ module.exports = {
 
     const warehouseNum = input[2];
     const stockLimit = input[3] ? parseInt(input[3]) : null;
-    const file = readJsonfile();
+    const file = readJsonfile(false);
     const { warehouses } = file;
 
     if (warehouses[warehouseNum]) {
@@ -37,12 +37,12 @@ module.exports = {
       },
     };
 
-    writeToJsonFile(newFile);
+    writeToJsonFile(newFile, false);
     terminal.green(`\nWarehouse # ${warehouseNum} added sucsessfully!`);
   },
 
   listWarehouses: () => {
-    const file = readJsonfile();
+    const file = readJsonfile(false);
     const { warehouses } = file;
 
     if (_.isEmpty(warehouses)) {
@@ -83,7 +83,7 @@ module.exports = {
 
     const inputWarehouseNum = input[2];
 
-    const file = readJsonfile();
+    const file = readJsonfile(false);
     const { warehouses } = file;
 
     if (warehouses[inputWarehouseNum] === undefined) {

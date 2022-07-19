@@ -7,7 +7,7 @@ const {
 
 module.exports = {
   addCommands: (enteredCommands) => {
-    const file = readJsonfile();
+    const file = readJsonfile(false);
     const { commands } = file;
 
     enteredCommands.forEach((command) => commands.push(command));
@@ -17,7 +17,7 @@ module.exports = {
       commands: [...commands],
     };
 
-    writeToJsonFile(newFile);
+    writeToJsonFile(newFile, false);
   },
 
   listCommands: () => {

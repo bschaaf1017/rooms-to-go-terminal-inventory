@@ -1,10 +1,10 @@
 const term = require('terminal-kit').terminal;
 
 const { parseCommandType, clearDB } = require('./utils');
-const { addProduct, listProducts } = require('./services/product');
-const { addWarehouse, listWarehouses, listSingleWarehouse } = require('./services/warehouse');
-const { stockProduct, unstockProduct } = require('./services/stock');
-const { addCommands, listCommands } = require('./services/debug');
+const { addProduct, listProducts } = require('./controllers/product');
+const { addWarehouse, listWarehouses, listSingleWarehouse } = require('./controllers/warehouse');
+const { stockProduct, unstockProduct } = require('./controllers/stock');
+const { addCommands, listCommands } = require('./controllers/debug');
 const commandTypes = require('./config/commandTypes');
 
 const history = ['ADD', 'STOCK', 'UNSTOCK', 'LIST', 'CLEAR'];
@@ -23,8 +23,10 @@ const autoComplete = [
 
 let enteredCommands = [];
 
-const renderInputField = () => {
-  term.bold.magenta('\nEnter command: ');
+const renderInputField = (isTest) => {
+  if (!isTest) {
+    term.bold.magenta('\nEnter command: ');
+  }
   term.inputField(
     { history, autoComplete, autoCompleteMenu: true },
     (error, input) => {
@@ -46,7 +48,7 @@ const renderInputField = () => {
 
       switch (commandType) {
         case commandTypes.addProduct:
-          addProduct(input);
+          addProduct(input, false);
           break;
         case commandTypes.addWarehouse:
           addWarehouse(input);
@@ -58,7 +60,7 @@ const renderInputField = () => {
           unstockProduct(input);
           break;
         case commandTypes.listProducts:
-          listProducts();
+          listProducts(false);
           break;
         case commandTypes.listWarehouses:
           listWarehouses();
@@ -67,7 +69,7 @@ const renderInputField = () => {
           listSingleWarehouse(input);
           break;
         case commandTypes.clear:
-          clearDB();
+          clearDB(false);
           break;
         case commandTypes.debug:
           listCommands();
@@ -80,20 +82,28 @@ const renderInputField = () => {
   );
 };
 
-const app = () => {
-  term.bold.green('Welcome to my interactive Rooms-to-Go warehouse and inventory terminal app');
+const terminateApp = () => {
+  if (enteredCommands.length > 0) {
+    // if there is only one command in the enteredCommands array write to file before exit
+    addCommands(enteredCommands);
+  }
+  process.exit();
+};
 
-  term.on('key', (name, matches, data) => {
+const app = (isTest) => {
+  if (!isTest) {
+    term.bold.green('Welcome to my interactive Rooms-to-Go warehouse and inventory terminal app');
+  }
+
+  term.on('key', (name) => {
     if (name === 'CTRL_C') {
-      // if there is only one command in the enteredCommands array write to file before exit
-      if (enteredCommands.length > 0) {
-        addCommands(enteredCommands);
-      }
-      process.exit();
+      terminateApp();
     }
   });
 
-  renderInputField();
+  renderInputField(isTest);
 };
 
-app();
+app(false);
+
+module.exports = { app, terminateApp };

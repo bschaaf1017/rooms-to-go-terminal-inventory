@@ -27,7 +27,7 @@ module.exports = {
       return;
     }
 
-    const file = readJsonfile();
+    const file = readJsonfile(false);
     const { products, warehouses } = file;
     console.log('products: ', products);
     console.log('warehouses: ', warehouses);
@@ -70,7 +70,7 @@ module.exports = {
         warehouses: {
           ...warehouses,
         },
-      });
+      }, false);
       terminal.green('Successfully updated the quantity of ')
         .blue.bold(`${products[inputSku].name}`)
         .green(' from ')
@@ -93,7 +93,7 @@ module.exports = {
       warehouses: {
         ...warehouses,
       },
-    });
+    }, false);
 
     terminal.green('Successfully added ')
       .blue.bold(`${inputQty}`)
@@ -122,7 +122,7 @@ module.exports = {
       return;
     }
 
-    const file = readJsonfile();
+    const file = readJsonfile(false);
     const { products, warehouses } = file;
     console.log('products: ', products);
     console.log('warehouses: ', warehouses);
@@ -170,7 +170,7 @@ module.exports = {
           },
         },
       },
-    });
+    }, false);
 
     terminal.green('\nWarehouse ')
       .blue.bold(`${inputWarehouseNum}'s`)

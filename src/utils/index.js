@@ -47,32 +47,44 @@ module.exports = {
     return skuRegex.test(sku);
   },
 
-  readJsonfile: () => {
+  readJsonfile: (isTest) => {
     try {
-      const file = fs.readFileSync('rooms-to-go.json', 'utf8');
-      return JSON.parse(file);
+      if (!isTest) {
+        const file = fs.readFileSync('rooms-to-go.json', 'utf8');
+        return JSON.parse(file);
+      }
+      const testFile = fs.readFileSync('rooms-to-go-test.json', 'utf8');
+      return JSON.parse(testFile);
     } catch (err) {
       console.log('err: ', err);
     }
   },
 
-  writeToJsonFile: (data) => {
+  writeToJsonFile: (data, isTest) => {
     data = JSON.stringify(data);
     try {
-      fs.writeFileSync('rooms-to-go.json', data);
+      if (!isTest) {
+        fs.writeFileSync('rooms-to-go.json', data);
+      } else {
+        fs.writeFileSync('rooms-to-go-test.json', data);
+      }
     } catch (err) {
       console.log('err', err);
     }
   },
 
-  clearDB: () => {
+  clearDB: (isTest) => {
     const newFile = JSON.stringify({
       products: {},
       warehouses: {},
       commands: [],
     });
     try {
-      fs.writeFileSync('rooms-to-go.json', newFile);
+      if (!isTest) {
+        fs.writeFileSync('rooms-to-go.json', newFile);
+      } else {
+        fs.writeFileSync('rooms-to-go-test.json', newFile);
+      }
     } catch (err) {
       console.log('err: ', err);
     }
