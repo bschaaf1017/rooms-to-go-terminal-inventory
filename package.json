@@ -7,7 +7,7 @@
     "start": "node src/app.js",
     "lint": "eslint . --ext .js",
     "lint:fix": "npm run lint -- --fix",
-    "test": "mocha --recursive --exit",
+    "test": "mocha --recursive",
     "coverage": "nyc --reporter=html npm run test"
   },
   "author": "",

@@ -7,22 +7,33 @@ const {
 } = require('../utils');
 
 module.exports = {
-  addWarehouse: (input) => {
+  addWarehouse: (input, isTest) => {
     input = input.split(' ');
 
     if (input.length <= 2) {
-      terminal.red('\nYou must provide a Warhouse number');
-      return;
+      if (!isTest) {
+        terminal.red('\nYou must provide a Warhouse number');
+      }
+      return false;
+    }
+
+    if (_.isNaN(Number(input[2]))) {
+      if (!isTest) {
+        terminal.red('\nWarehouse number must be a number');
+      }
+      return false;
     }
 
     const warehouseNum = input[2];
-    const stockLimit = input[3] ? parseInt(input[3]) : null;
-    const file = readJsonfile(false);
+    const stockLimit = input[3] ? Number(input[3]) : null;
+    const file = readJsonfile(isTest);
     const { warehouses } = file;
 
     if (warehouses[warehouseNum]) {
-      terminal.red(`\nA warehouse with number: ${warehouseNum} already exists.`);
-      return;
+      if (!isTest) {
+        terminal.red(`\nA warehouse with number: ${warehouseNum} already exists.`);
+      }
+      return false;
     }
 
     const newFile = {
@@ -37,17 +48,23 @@ module.exports = {
       },
     };
 
-    writeToJsonFile(newFile, false);
-    terminal.green(`\nWarehouse # ${warehouseNum} added sucsessfully!`);
+    writeToJsonFile(newFile, isTest);
+    if (!isTest) {
+      terminal.green(`\nWarehouse # ${warehouseNum} added sucsessfully!`);
+    }
+
+    return true;
   },
 
-  listWarehouses: () => {
-    const file = readJsonfile(false);
+  listWarehouses: (isTest) => {
+    const file = readJsonfile(isTest);
     const { warehouses } = file;
 
     if (_.isEmpty(warehouses)) {
-      terminal.red('\nThere are no warehouses in the database.');
-      return;
+      if (!isTest) {
+        terminal.red('\nThere are no warehouses in the database.');
+      }
+      return false;
     }
 
     const table = [];
@@ -59,18 +76,21 @@ module.exports = {
     }
 
     table.unshift(['Warehouse #', 'Stock Limit']);
-    terminal('\n');
-    terminal.table(table, {
-      hasBorder: true,
-      contentHasMarkup: true,
-      borderChars: 'lightRounded',
-      borderAttr: { color: 'blue' },
-      textAttr: { bgColor: 'default' },
-      firstCellTextAttr: { bgColor: 'blue' },
-      firstRowTextAttr: { bgColor: 'blue' },
-      width: 80,
-      fit: true,
-    });
+    if (!isTest) {
+      terminal('\n');
+      terminal.table(table, {
+        hasBorder: true,
+        contentHasMarkup: true,
+        borderChars: 'lightRounded',
+        borderAttr: { color: 'blue' },
+        textAttr: { bgColor: 'default' },
+        firstCellTextAttr: { bgColor: 'blue' },
+        firstRowTextAttr: { bgColor: 'blue' },
+        width: 80,
+        fit: true,
+      });
+    }
+    return table;
   },
 
   listSingleWarehouse: (input) => {

@@ -51,7 +51,7 @@ const renderInputField = (isTest) => {
           addProduct(input, false);
           break;
         case commandTypes.addWarehouse:
-          addWarehouse(input);
+          addWarehouse(input, false);
           break;
         case commandTypes.stock:
           stockProduct(input);
