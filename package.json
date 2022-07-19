@@ -4,15 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon -L app.js"
+    "start": "node src/app.js",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "mocha --recursive",
+    "coverage": "nyc --reporter=html npm run test"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chai": "^4.3.6",
     "fs": "0.0.1-security",
     "lodash": "^4.17.21",
-    "nodemon": "^2.0.19",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
     "terminal-kit": "^2.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.20.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
   }
 }
