@@ -16,10 +16,18 @@ module.exports = {
       }
       return false;
     }
-
+    // make sure warehouse number is type number
     if (_.isNaN(Number(input[2]))) {
       if (!isTest) {
         terminal.red('\nWarehouse number must be a number');
+      }
+      return false;
+    }
+
+    // make sure warehouse stock limit is type number
+    if (input[3] && _.isNaN(Number(input[3]))) {
+      if (!isTest) {
+        terminal.red('\nWarehouse stock limit must be a number');
       }
       return false;
     }
@@ -93,34 +101,39 @@ module.exports = {
     return table;
   },
 
-  listSingleWarehouse: (input) => {
+  listSingleWarehouse: (input, isTest) => {
     input = input.split(' ');
 
     if (input.length !== 3 || input[2] === '') {
-      terminal.red('\nYou must provide a Warhouse number');
-      return;
+      if (!isTest) {
+        terminal.red('\nYou must provide a Warhouse number');
+      }
+      return false;
     }
 
     const inputWarehouseNum = input[2];
 
-    const file = readJsonfile(false);
+    const file = readJsonfile(isTest);
     const { warehouses } = file;
 
     if (warehouses[inputWarehouseNum] === undefined) {
-      terminal.red('\nThe Warhouse number you provided does not exist');
-      return;
+      if (!isTest) {
+        terminal.red('\nThe Warhouse number you provided does not exist');
+      }
+      return false;
     }
 
     const { stockedProducts } = warehouses[inputWarehouseNum];
 
     if (_.isEmpty(stockedProducts)) {
-      terminal.red('\nWarhouse ')
-        .blue.bold(`${inputWarehouseNum}`)
-        .red(' doesnt have anything stocked in it yet but has space for ')
-        .blue.bold(`${warehouses[inputWarehouseNum].stockLimit}`)
-        .red(' products');
-
-      return;
+      if (!isTest) {
+        terminal.red('\nWarhouse ')
+          .blue.bold(`${inputWarehouseNum}`)
+          .red(' doesnt have anything stocked in it yet but has space for ')
+          .blue.bold(`${warehouses[inputWarehouseNum].stockLimit}`)
+          .red(' products');
+      }
+      return false;
     }
 
     const table = [];
@@ -131,18 +144,23 @@ module.exports = {
         stockedProducts[key].qty,
       ]);
     }
+
     table.unshift(['Item Name', 'SKU', 'QTY']);
-    terminal('\n');
-    terminal.table(table, {
-      hasBorder: true,
-      contentHasMarkup: true,
-      borderChars: 'lightRounded',
-      borderAttr: { color: 'blue' },
-      textAttr: { bgColor: 'default' },
-      firstCellTextAttr: { bgColor: 'blue' },
-      firstRowTextAttr: { bgColor: 'blue' },
-      width: 80,
-      fit: true,
-    });
+    if (!isTest) {
+      terminal('\n');
+      terminal.table(table, {
+        hasBorder: true,
+        contentHasMarkup: true,
+        borderChars: 'lightRounded',
+        borderAttr: { color: 'blue' },
+        textAttr: { bgColor: 'default' },
+        firstCellTextAttr: { bgColor: 'blue' },
+        firstRowTextAttr: { bgColor: 'blue' },
+        width: 80,
+        fit: true,
+      });
+    }
+
+    return table;
   },
 };

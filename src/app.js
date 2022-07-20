@@ -23,6 +23,14 @@ const autoComplete = [
 
 let enteredCommands = [];
 
+const terminateApp = () => {
+  if (enteredCommands.length > 0) {
+    // if there is only one command in the enteredCommands array write to file before exit
+    addCommands(enteredCommands);
+  }
+  process.exit();
+};
+
 const renderInputField = (isTest) => {
   if (!isTest) {
     term.bold.magenta('\nEnter command: ');
@@ -54,19 +62,19 @@ const renderInputField = (isTest) => {
           addWarehouse(input, false);
           break;
         case commandTypes.stock:
-          stockProduct(input);
+          stockProduct(input, false);
           break;
         case commandTypes.unstock:
-          unstockProduct(input);
+          unstockProduct(input, false);
           break;
         case commandTypes.listProducts:
           listProducts(false);
           break;
         case commandTypes.listWarehouses:
-          listWarehouses();
+          listWarehouses(false);
           break;
         case commandTypes.listWarehouse:
-          listSingleWarehouse(input);
+          listSingleWarehouse(input, false);
           break;
         case commandTypes.clear:
           clearDB(false);
@@ -74,20 +82,15 @@ const renderInputField = (isTest) => {
         case commandTypes.debug:
           listCommands();
           break;
+        case commandTypes.quit:
+          terminateApp();
+          break;
         default:
           break;
       }
       renderInputField();
     },
   );
-};
-
-const terminateApp = () => {
-  if (enteredCommands.length > 0) {
-    // if there is only one command in the enteredCommands array write to file before exit
-    addCommands(enteredCommands);
-  }
-  process.exit();
 };
 
 const app = (isTest) => {
