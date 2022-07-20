@@ -31,7 +31,7 @@ module.exports = {
       return false;
     }
 
-    const file = readJsonfile(false, isTest);
+    const file = readJsonfile(isTest);
     const { products, warehouses } = file;
 
     // make sure there is a product with the input sku
@@ -115,49 +115,59 @@ module.exports = {
     return true;
   },
 
-  unstockProduct: (input) => {
+  unstockProduct: (input, isTest) => {
     input = input.split(' ');
     if (input.length !== 4 || input[3] === '') {
-      terminal.red('\nInvalid UNSTOCK input, please enter in this format: UNSTOCK <sku> <warhouse_num> <qty>');
-      return;
+      if (!isTest) {
+        terminal.red('\nInvalid UNSTOCK input, please enter in this format: UNSTOCK <sku> <warhouse_num> <qty>');
+      }
+      return false;
     }
 
     const inputSku = input[1];
     const inputWarehouseNum = input[2];
-    const inputQty = parseInt(input[3]);
+    const inputQty = Number(input[3]);
 
     // validate sku
     const isValidSKU = validateSKU(inputSku);
     if (!isValidSKU) {
-      terminal.red('\nInvalid input SKU, should be in format: ')
-        .italic('abcd1234-ab12-ab12-ab12-abcdef123456');
-      return;
+      if (!isTest) {
+        terminal.red('\nInvalid input SKU, should be in format: ')
+          .italic('abcd1234-ab12-ab12-ab12-abcdef123456');
+      }
+      return false;
     }
 
-    const file = readJsonfile(false);
+    const file = readJsonfile(isTest);
     const { products, warehouses } = file;
 
     // make sure there is a product with the input sku
     if (products[inputSku] === undefined) {
-      terminal.red('\nThere are no products with that SKU');
-      return;
+      if (!isTest) {
+        terminal.red('\nThere are no products with that SKU');
+      }
+      return false;
     }
 
     // make sure there is a warehouse with the input warehouse number
     if (warehouses[inputWarehouseNum] === undefined) {
-      terminal.red('\nThere are no warehouses with that number');
-      return;
+      if (!isTest) {
+        terminal.red('\nThere are no warehouses with that number');
+      }
+      return false;
     }
 
     const { stockedProducts } = warehouses[inputWarehouseNum];
     // make sure input warehouse has that product in stock before unstocking
-    if (stockedProducts[inputSku] === undefined) {
-      terminal.red('\nWarehouse ')
-        .blue.bold(`${inputWarehouseNum}`)
-        .red(' doesnt have any ')
-        .blue.bold(`${inputSku}`)
-        .red(' in stock ');
-      return;
+    if (stockedProducts[inputSku] === undefined || stockedProducts[inputSku].qty === 0) {
+      if (!isTest) {
+        terminal.red('\nWarehouse ')
+          .blue.bold(`${inputWarehouseNum}`)
+          .red(' doesnt have any ')
+          .blue.bold(`${inputSku}`)
+          .red(' in stock ');
+      }
+      return false;
     }
 
     const tempQty = stockedProducts[inputSku].qty;
@@ -179,15 +189,18 @@ module.exports = {
           },
         },
       },
-    }, false);
+    }, isTest);
 
-    terminal.green('\nWarehouse ')
-      .blue.bold(`${inputWarehouseNum}'s`)
-      .green(' stock of ')
-      .blue.bold(`${inputSku}`)
-      .green(' has been updated from ')
-      .blue.bold(`${tempQty}`)
-      .green(' to ')
-      .blue.bold(`${stockedProducts[inputSku].qty}`);
+    if (!isTest) {
+      terminal.green('\nWarehouse ')
+        .blue.bold(`${inputWarehouseNum}'s`)
+        .green(' stock of ')
+        .blue.bold(`${inputSku}`)
+        .green(' has been updated from ')
+        .blue.bold(`${tempQty}`)
+        .green(' to ')
+        .blue.bold(`${stockedProducts[inputSku].qty}`);
+    }
+    return true;
   },
 };

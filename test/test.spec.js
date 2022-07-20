@@ -3,6 +3,7 @@ const { expect } = require('chai');
 const { app, terminateApp } = require('../src/app');
 const { addProduct, listProducts } = require('../src/controllers/product');
 const { addWarehouse, listWarehouses, listSingleWarehouse } = require('../src/controllers/warehouse');
+const { stockProduct, unstockProduct } = require('../src/controllers/stock');
 const { clearDB, readJsonfile } = require('../src/utils');
 
 
@@ -119,6 +120,105 @@ describe('Rooms to Go Terminal App Tests', () => {
         const list = listSingleWarehouse('LIST WAREHOUSE 444', true);
         expect(list).to.be.false;
       });
+
+      it('The quantitly of BEDs in Warehouse 444 should 200', () => {
+        addProduct('ADD PRODUCT "BED" 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70', true);
+        stockProduct('STOCK 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70 444 200', true);
+        const list = listSingleWarehouse('LIST WAREHOUSE 444', true);
+        expect(list[1][2]).to.equal(200);
+      });
     });
   });
+
+  describe('Stock Controller', () => {
+    describe('#stockProduct()', () => {
+      it('Should return error if STOCK command doesnt contain required parameters', () => {
+        const stock = stockProduct('STOCK 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70 444', true);
+        expect(stock).to.be.false;
+      });
+
+      it('Should return error if SKU is not valid format', () => {
+        const stock = stockProduct('STOCK 5ce956fa-a7-4b-b6-5eeaa5eb0a70 444 200', true);
+        expect(stock).to.be.false;
+      });
+
+      it('Should return error if there are no products in stock with input SKU', () => {
+        const stock = stockProduct('STOCK 1234abcd-ab12-ab12-ab12-123456abcdef 444 200', true);
+        expect(stock).to.be.false;
+      });
+
+      it('Should return error if there are no warehouses with input warehouse number', () => {
+        const stock = stockProduct('STOCK 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70 4449 200', true);
+        expect(stock).to.be.false;
+      });
+
+      it('Should return error if input stock qty exceeds warehouse stock limit', () => {
+        const stock = stockProduct('STOCK 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70 444 2000', true);
+        expect(stock).to.be.false;
+      });
+
+      it('Should properly update warehouse stock limit if one exists', () => {
+        const stock = stockProduct('STOCK 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70 111 100', true);
+        const file = readJsonfile(true);
+        const { warehouses } = file;
+        expect(warehouses['111'].stockLimit).to.equal(900);
+      });
+
+      it('Should properly update stock qty if warehouse already has stock of input product', () => {
+        const stock = stockProduct('STOCK 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70 111 100', true);
+        const file = readJsonfile(true);
+        const { warehouses } = file;
+        expect(warehouses['111'].stockedProducts['5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70'].qty).to.equal(200);
+      });
+    });
+
+    describe('#unstockProduct()', () => {
+      it('Should return error if UNSTOCK command doesnt contain required parameters', () => {
+        const stock = unstockProduct('UNSTOCK 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70 444', true);
+        expect(stock).to.be.false;
+      });
+
+      it('Should return error if SKU is not valid format', () => {
+        const stock = unstockProduct('UNSTOCK 5ce956fa-a7-4b-b6-5eeaa5eb0a70 444 200', true);
+        expect(stock).to.be.false;
+      });
+
+      it('Should return error if there are no products in stock with input SKU', () => {
+        const stock = unstockProduct('UNSTOCK 1234abcd-ab12-ab12-ab12-123456abcdef 444 200', true);
+        expect(stock).to.be.false;
+      });
+
+      it('Should return error if there are no warehouses with input warehouse number', () => {
+        const stock = unstockProduct('UNSTOCK 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70 4449 200', true);
+        expect(stock).to.be.false;
+      });
+
+      it('Should return error if warehouses has no products with input sku in stock', () => {
+        addProduct('ADD PRODUCT "Sofia Vegara 5 Piece Living Room Set" 38538505-0767-453f-89af-d11c809ebb3b', true);
+        const stock = unstockProduct('UNSTOCK 38538505-0767-453f-89af-d11c809ebb3b 111 200', true);
+        expect(stock).to.be.false;
+      });
+
+      it('Should set Stock qty to 0 if input qty is > than current stock', () => {
+        // qty is 200 before running this test
+        unstockProduct('UNSTOCK 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70 111 300', true);
+        const file = readJsonfile(true);
+        const { warehouses } = file;
+        expect(warehouses['111'].stockedProducts['5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70'].qty).to.equal(0);
+      });
+
+      it('Should return error if Stock qty at input warehouse is 0', () => {
+        const stock = unstockProduct('UNSTOCK 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70 111 300', true);
+        expect(stock).to.be.false;
+      });
+
+      it('Should properly update stock qty at input warehouse', () => {
+        // qty is 200 before running this test
+        unstockProduct('UNSTOCK 5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70 444 100', true);
+        const file = readJsonfile(true);
+        const { warehouses } = file;
+        expect(warehouses['444'].stockedProducts['5ce956fa-a71e-4bfb-b6ae-5eeaa5eb0a70'].qty).to.equal(100);
+      });
+    });
+  })
 });

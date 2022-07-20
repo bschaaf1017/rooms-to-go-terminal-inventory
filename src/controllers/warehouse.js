@@ -105,7 +105,7 @@ module.exports = {
 
     const inputWarehouseNum = input[2];
 
-    const file = readJsonfile(false, isTest);
+    const file = readJsonfile(isTest);
     const { warehouses } = file;
 
     if (warehouses[inputWarehouseNum] === undefined) {
