@@ -105,7 +105,20 @@ describe('Rooms to Go Terminal App Tests', () => {
 
 
     describe('#listSingleWarehouse()', () => {
+      it('Should return error if no warehouse number is entered', () => {
+        const list = listSingleWarehouse('LIST WAREHOUSE', true);
+        expect(list).to.be.false;
+      });
 
+      it('Should return error if input warehouse number doest exist', () => {
+        const list = listSingleWarehouse('LIST WAREHOUSE 1111', true);
+        expect(list).to.be.false;
+      });
+
+      it('Should return error if input warehouse has no products stocked in it', () => {
+        const list = listSingleWarehouse('LIST WAREHOUSE 444', true);
+        expect(list).to.be.false;
+      });
     });
   });
 });

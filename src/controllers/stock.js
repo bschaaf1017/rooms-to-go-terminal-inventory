@@ -8,49 +8,60 @@ const {
 
 module.exports = {
 
-  stockProduct: (input) => {
+  stockProduct: (input, isTest) => {
     input = input.split(' ');
     if (input.length !== 4 || input[3] === '') {
-      terminal.red('\nInvalid STOCK input, please enter in this format: STOCK <sku> <warhouse_num> <qty>');
-      return;
+      if (!isTest) {
+        terminal.red('\nInvalid STOCK input, please enter in this format: STOCK <sku> <warhouse_num> <qty>');
+      }
+      return false;
     }
 
     const inputSku = input[1];
     const inputWarehouseNum = input[2];
-    const inputQty = parseInt(input[3]);
+    const inputQty = Number(input[3]);
 
     // validate sku
     const isValidSKU = validateSKU(inputSku);
     if (!isValidSKU) {
-      terminal.red('\nInvalid input SKU, should be in format: ')
-        .italic('abcd1234-ab12-ab12-ab12-abcdef123456');
-      return;
+      if (!isTest) {
+        terminal.red('\nInvalid input SKU, should be in format: ')
+          .italic('abcd1234-ab12-ab12-ab12-abcdef123456');
+      }
+      return false;
     }
 
-    const file = readJsonfile(false);
+    const file = readJsonfile(false, isTest);
     const { products, warehouses } = file;
 
     // make sure there is a product with the input sku
     if (products[inputSku] === undefined) {
-      terminal.red('\nThere are no products with that SKU, create a new product before stocking it in a warehouse');
-      return;
+      if (!isTest) {
+        terminal.red('\nThere are no products with that SKU, create a new product before stocking it in a warehouse');
+      }
+      return false;
     }
 
     // make sure there is a warehouse with the input warehouse number
     if (warehouses[inputWarehouseNum] === undefined) {
-      terminal.red('\nThere are no warehouses with that number, create a new warehouse before stocking it with products');
-      return;
+      if (!isTest) {
+        terminal.red('\nThere are no warehouses with that number, create a new warehouse before stocking it with products');
+      }
+      return false;
     }
 
-    // check if there is enough available space for the product in the warehouse
+    // check if warehouse has a stock limit
     if (warehouses[inputWarehouseNum].stockLimit) {
+      // if input qty exceeds warehouse stock limit
       if (inputQty > warehouses[inputWarehouseNum].stockLimit) {
-        terminal.red('\nThere is only ')
-          .blue.bold(`${warehouses[inputWarehouseNum].stockLimit}`)
-          .red(' stock space in warehouse ')
-          .blue.bold(`${inputWarehouseNum}`)
-          .red(', consider a warehouse with more stock space available.');
-        return;
+        if (!isTest) {
+          terminal.red('\nThere is only ')
+            .blue.bold(`${warehouses[inputWarehouseNum].stockLimit}`)
+            .red(' stock space in warehouse ')
+            .blue.bold(`${inputWarehouseNum}`)
+            .red(', consider a warehouse with more stock space available.');
+        }
+        return false;
       }
 
       // update warehouse stock limit to take into account what is being added
@@ -67,15 +78,16 @@ module.exports = {
         warehouses: {
           ...warehouses,
         },
-      }, false);
-      terminal.green('Successfully updated the quantity of ')
-        .blue.bold(`${products[inputSku].name}`)
-        .green(' from ')
-        .blue.bold(`${tempQty}`)
-        .green(' to ')
-        .blue.bold(`${warehouses[inputWarehouseNum].stockedProducts[inputSku].qty}`);
-
-      return;
+      }, isTest);
+      if (!isTest) {
+        terminal.green('Successfully updated the quantity of ')
+          .blue.bold(`${products[inputSku].name}`)
+          .green(' from ')
+          .blue.bold(`${tempQty}`)
+          .green(' to ')
+          .blue.bold(`${warehouses[inputWarehouseNum].stockedProducts[inputSku].qty}`);
+      }
+      return true;
     }
 
     warehouses[inputWarehouseNum].stockedProducts = {
@@ -90,14 +102,17 @@ module.exports = {
       warehouses: {
         ...warehouses,
       },
-    }, false);
+    }, isTest);
 
-    terminal.green('Successfully added ')
-      .blue.bold(`${inputQty}`)
-      .green(' of ')
-      .blue.bold(`${products[inputSku].name}`)
-      .green(' to warehouse ')
-      .blue.bold(`${inputWarehouseNum}`);
+    if (!isTest) {
+      terminal.green('Successfully added ')
+        .blue.bold(`${inputQty}`)
+        .green(' of ')
+        .blue.bold(`${products[inputSku].name}`)
+        .green(' to warehouse ')
+        .blue.bold(`${inputWarehouseNum}`);
+    }
+    return true;
   },
 
   unstockProduct: (input) => {
