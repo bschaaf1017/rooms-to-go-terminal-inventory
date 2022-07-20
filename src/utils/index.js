@@ -31,6 +31,10 @@ module.exports = {
           commandList[i] === commandTypes.debug
           && inputCommand[0] === commandList[i]
         )
+        || (
+          commandList[i] === commandTypes.quit
+          && inputCommand[0] === commandList[i]
+        )
       ) {
         return commandList[i];
       }
