@@ -131,7 +131,7 @@ list of things i tested which can be found in `test/test.spec.js`
 - Should return error if there are no products in stock with input SKU
 - Should return error if there are no warehouses with input warehouse number
 - Should return error if warehouses has no products with input sku in stock
-        - Should set Stock qty to 0 if input qty is > than current stock
-        - Should return error if Stock qty at input warehouse is 0
-        - Should properly update stock qty at input warehouse
+- Should set Stock qty to 0 if input qty is > than current stock
+- Should return error if Stock qty at input warehouse is 0
+- Should properly update stock qty at input warehouse
 
