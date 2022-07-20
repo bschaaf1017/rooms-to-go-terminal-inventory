@@ -80,7 +80,7 @@ module.exports = {
         },
       }, isTest);
       if (!isTest) {
-        terminal.green('Successfully updated the quantity of ')
+        terminal.green('\nSuccessfully updated the quantity of ')
           .blue.bold(`${products[inputSku].name}`)
           .green(' from ')
           .blue.bold(`${tempQty}`)
@@ -105,7 +105,7 @@ module.exports = {
     }, isTest);
 
     if (!isTest) {
-      terminal.green('Successfully added ')
+      terminal.green('\nSuccessfully added ')
         .blue.bold(`${inputQty}`)
         .green(' of ')
         .blue.bold(`${products[inputSku].name}`)

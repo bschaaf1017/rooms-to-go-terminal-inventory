@@ -54,16 +54,16 @@ const renderInputField = (isTest) => {
           addWarehouse(input, false);
           break;
         case commandTypes.stock:
-          stockProduct(input);
+          stockProduct(input, false);
           break;
         case commandTypes.unstock:
-          unstockProduct(input);
+          unstockProduct(input, false);
           break;
         case commandTypes.listProducts:
           listProducts(false);
           break;
         case commandTypes.listWarehouses:
-          listWarehouses();
+          listWarehouses(false);
           break;
         case commandTypes.listWarehouse:
           listSingleWarehouse(input, false);

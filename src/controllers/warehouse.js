@@ -16,10 +16,18 @@ module.exports = {
       }
       return false;
     }
-
+    // make sure warehouse number is type number
     if (_.isNaN(Number(input[2]))) {
       if (!isTest) {
         terminal.red('\nWarehouse number must be a number');
+      }
+      return false;
+    }
+
+    // make sure warehouse stock limit is type number
+    if (input[3] && _.isNaN(Number(input[3]))) {
+      if (!isTest) {
+        terminal.red('\nWarehouse stock limit must be a number');
       }
       return false;
     }
