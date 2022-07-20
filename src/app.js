@@ -66,7 +66,7 @@ const renderInputField = (isTest) => {
           listWarehouses();
           break;
         case commandTypes.listWarehouse:
-          listSingleWarehouse(input);
+          listSingleWarehouse(input, false);
           break;
         case commandTypes.clear:
           clearDB(false);

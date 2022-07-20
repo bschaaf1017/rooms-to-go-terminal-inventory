@@ -29,8 +29,6 @@ module.exports = {
 
     const file = readJsonfile(false);
     const { products, warehouses } = file;
-    console.log('products: ', products);
-    console.log('warehouses: ', warehouses);
 
     // make sure there is a product with the input sku
     if (products[inputSku] === undefined) {
@@ -58,7 +56,6 @@ module.exports = {
       // update warehouse stock limit to take into account what is being added
       warehouses[inputWarehouseNum].stockLimit -= inputQty;
     }
-    console.log('warehouses after update:', warehouses);
 
     // check to see if this product already has some stock at that warehouse and increment,
     // writeToJsonFile only updated warehouse data if necessary and exit function
@@ -124,8 +121,6 @@ module.exports = {
 
     const file = readJsonfile(false);
     const { products, warehouses } = file;
-    console.log('products: ', products);
-    console.log('warehouses: ', warehouses);
 
     // make sure there is a product with the input sku
     if (products[inputSku] === undefined) {
@@ -140,7 +135,6 @@ module.exports = {
     }
 
     const { stockedProducts } = warehouses[inputWarehouseNum];
-    console.log('stockedProducts: ', stockedProducts);
     // make sure input warehouse has that product in stock before unstocking
     if (stockedProducts[inputSku] === undefined) {
       terminal.red('\nWarehouse ')

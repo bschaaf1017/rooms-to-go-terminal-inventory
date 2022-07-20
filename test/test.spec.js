@@ -17,9 +17,7 @@ describe('Rooms to Go Terminal App Tests', () => {
   });
 
   describe('Product Controller', () => {
-
     describe('#addProduct()', () => {
-
       it('should create a product', () => {
         const add = addProduct('ADD PRODUCT "Sofia Vegara 5 Piece Living Room Set" 38538505-0767-453f-89af-d11c809ebb3b', true);
         expect(add).to.be.true;
@@ -35,12 +33,12 @@ describe('Rooms to Go Terminal App Tests', () => {
         expect(add).to.be.false;
       });
 
-      it('If a product with entered SKU is already in DB should not allow creating it', () => {
+      it('Should return error if trying to add product with SKU thats already in DB', () => {
         const add = addProduct('ADD PRODUCT "Sofia Vegara 5 Piece Living Room Set" 38538505-0767-453f-89af-d11c809ebb3b', true);
         expect(add).to.be.false;
       });
 
-      it('If a product with same name is already in DB but has different SKU, should still create', () => {
+      it('Should create product with same name as long as SKU is unique', () => {
         const add = addProduct('ADD PRODUCT "Sofia Vegara 5 Piece Living Room Set" 12345678-abcd-1234-abcd-1234567890ab', true);
         expect(add).to.be.true;
       });
@@ -48,7 +46,6 @@ describe('Rooms to Go Terminal App Tests', () => {
     });
 
     describe('#listProduct()', () => {
-
       it('should return list of products if some exist', () => {
         const list = listProducts('LIST PRODUCTS', true);
         expect(list).to.be.an('array');
@@ -59,15 +56,11 @@ describe('Rooms to Go Terminal App Tests', () => {
         const list = listProducts('LIST PRODUCTS', true);
         expect(list).to.be.false;
       });
-
     });
-
   });
 
   describe('Warehouse Controller', () => {
-
     describe('#listWarehouses()', () => {
-
       it('Should return error if no warehouses in DB', () => {
         const list = listWarehouses('LIST WAREHOUSES', true);
         expect(list).to.be.false;
@@ -78,12 +71,10 @@ describe('Rooms to Go Terminal App Tests', () => {
         const list = listWarehouses('LIST WAREHOUSES', true);
         expect(list).to.be.an('array');
       });
-
     });
 
 
     describe('#addWarehouse()', () => {
-
       it('Should return error if command didnt include warehouse number', () => {
         const add = addWarehouse('ADD WAREHOUSE', true);
         expect(add).to.be.false;
@@ -110,7 +101,6 @@ describe('Rooms to Go Terminal App Tests', () => {
         const file = readJsonfile(true);
         expect(file.warehouses['444'].stockLimit).to.equal(1000);
       });
-
     });
 
 
@@ -118,5 +108,4 @@ describe('Rooms to Go Terminal App Tests', () => {
 
     });
   });
-
 });
