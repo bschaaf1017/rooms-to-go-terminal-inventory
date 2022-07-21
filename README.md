@@ -39,7 +39,7 @@ There are some other commands i added and used while i was developing the app:
 
 ## Implementation
 I will include a link to a screen share with more detailed walk through but ill provide the basics below..
-[link to screen share walkthrough on youtube](https://youtu.be/x6ou6epnwYo)
+[link to screen share walkthrough on youtube](https://youtu.be/t4rUg1sY7PE)
 
 The data does persist, I chose to go this route because it made it easier for me during development rather than having to add products and warehouses again after each restart. The data is stored in a json file and retreived each time its needed and then added to or updated and then wrote back. So basically for data storage i used JS objects like hash tables is i could search the data in constant time rather than having to loop through each time i needed to check for a procduct, warehouse, stock, etc. (obviously this solution would not work at scale)
 
