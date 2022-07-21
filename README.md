@@ -11,15 +11,15 @@ This is my terminal app created with node.js for the Rooms to Go take home asses
 ## Technologies
 Project is created with:
 * #### terminal-kit: 2.4.0
-  * This is the package I used for listening for input in the terminal and rendering text with different styles and colors
-  * I chose this specific package because it seemed to be one of the most widely used, with the best documentation and was well maintained
+  * This is the package I used to listening for input in the terminal and rendering text with different styles and colors
+  * I chose this specific package because it is one of the most widely used, with the best documentation and is well maintained
 * #### lodash: ^4.17.21
   * I used this package to type check for error handling purposes 
 * #### fs: 0.0.1-security
-  * I used this to write and read to a json file as a means of 'persistant' storage 
+  * I used this to read/write to/from a json file as a means of 'persistant' storage 
 * #### mocha: ^10.0.0
 * #### chai: ^4.3.6
-  * I used the above two packages for writing basic unit tests and I chose them becasue i felt the solutions they provide fit my use case and the syntax is very intuitive 
+  * I used the above two packages for writing basic unit tests and I chose them becasue the solutions they provide fit my use case and the syntax is very intuitive 
 * #### eslint: ^8.20.0
 * #### eslint-config-airbnb-base: ^15.0.0
   * The above two packages were used to enforce code style and format, helping to improve readability and refactorability for teammates current and future. (something i personally look for during code review)
@@ -38,16 +38,16 @@ There are some other commands i added and used while i was developing the app:
 * auto fixing any linting errors `npm run lint:fix`
 
 ## Implementation
-I will include a link to a screen share with more detailed walk through but ill provide the basics below..
+I will included a link to a screen share with more detailed walk through but also provided more details below..
 [link to screen share walkthrough on youtube](https://youtu.be/t4rUg1sY7PE)
 
-The data does persist, I chose to go this route because it made it easier for me during development rather than having to add products and warehouses again after each restart. The data is stored in a json file and retreived each time its needed and then added to or updated and then wrote back. So basically for data storage i used JS objects like hash tables is i could search the data in constant time rather than having to loop through each time i needed to check for a procduct, warehouse, stock, etc. (obviously this solution would not work at scale)
+The data does persist, I chose to go this route because it made it easier for me during development rather than having to add products and warehouses again after each restart. The data is stored in a json file and retreived each time its needed and then added to or updated and then wrote back. So basically for data storage i used JS objects like hash tables so i could search the data in constant time rather than having to loop through an array each time i needed to check for a procduct, warehouse, stock, etc. (obviously this solution would not work at scale)
 
 I did implement a fuction that will "drop the DB" by running the command `> CLEAR`
 
 Also i implemeted a history array which will allow the user hit the up/down arrow to loop through recent commands.
 
-In addition to the hisory i added a auto complete functionality so the user can hit the `TAB` key after begining to type any known command to the application and it will show auto complete options.
+In addition to the hisory i added auto complete functionality so the user can hit the `TAB` key after begining to type any known command to the application and it will show auto complete options.
 
 I added an additional feature/ command: `> DEBUG` running this command will render a table displaying all the commands that had been run in the order they where ran in. Given more time, more functiality i would have liked to have added to this command would be providing some flags to the command like `-d` would display command in desceding order or `-l <any_number>` would only display the most recent n number of commands, etc.
 
